@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mailbox Interface</title>
+    <title>Mailbox</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -50,6 +50,49 @@
             background-color: #0056b3;
         }
     </style>
+    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+    <script>
+        emailjs.init("9gydduA26qP4Do9xm"); // Replace with your EmailJS user ID
+
+        function sendEmail() {
+            var form = document.getElementById('emailForm');
+            var formData = new FormData(form);
+
+            var emailParams = {
+                to_name: "pa4995355@gmail.com", // Replace with recipient email
+                from_name: formData.get('email'),
+                subject: formData.get('subject'),
+                message_html: formData.get('body')
+            };
+
+            emailjs.send("service_xjqgy6v", "template_xg22lnh", emailParams)
+            .then(function(response) {
+                alert('Email sent successfully!');
+                console.log('SUCCESS!', response.status, response.text);
+                
+                // Send auto-reply email
+                sendAutoReply(emailParams.from_name, emailParams.subject, emailParams.message_html);
+            }, function(error) {
+                alert('Failed to send email. Please try again later.');
+                console.log('FAILED...', error);
+            });
+        }
+
+        function sendAutoReply(fromName, subject, messageHtml) {
+            var autoReplyParams = {
+                from_name: fromName,
+                subject: subject,
+                message_html: messageHtml
+            };
+
+            emailjs.send("service_xjqgy6v", "template_j7el58d", autoReplyParams)
+            .then(function(response) {
+                console.log('Auto-reply sent successfully!', response.status, response.text);
+            }, function(error) {
+                console.log('Failed to send auto-reply.', error);
+            });
+        }
+    </script>
 </head>
 <body>
     <div class="content">
@@ -66,30 +109,5 @@
             <button type="button" onclick="sendEmail()">Send</button>
         </form>
     </div>
-    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
-    <script>
-        emailjs.init("9gydduA26qP4Do9xm"); // Replace with your EmailJS user ID
-        
-        function sendEmail() {
-            var form = document.getElementById('emailForm');
-            var formData = new FormData(form);
-
-            var emailParams = {
-                to_name: "pa4995355@gmail.com", // Replace with recipient email
-                from_name: formData.get('email'),
-                subject: formData.get('subject'),
-                message_html: formData.get('body')
-            };
-
-            emailjs.send("service_xjqgy6v", "template_xg22lnh", emailParams)
-            .then(function(response) {
-                alert('Email sent successfully!');
-                console.log('SUCCESS!', response.status, response.text);
-            }, function(error) {
-                alert('Failed to send email. Please try again later.');
-                console.log('FAILED...', error);
-            });
-        }
-    </script>
 </body>
 </html>
